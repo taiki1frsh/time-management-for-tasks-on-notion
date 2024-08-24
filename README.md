@@ -1,4 +1,4 @@
-# task-management-on-notion
+# Time Management for Tasks on Notion
 
 A simple node-js script automates schedule handling for a task management database on Notion with the record of tracking on Toggl. The script is intended to be run when the endpoint is accessed with the method of GET or POST.
 
