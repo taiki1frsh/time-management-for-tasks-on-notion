@@ -1,0 +1,16 @@
+{
+  "name": "start-stop-on-notion-toggl",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "luxon": "^3.5.0",
+    "node-fetch": "^3.3.2"
+  }
+}
