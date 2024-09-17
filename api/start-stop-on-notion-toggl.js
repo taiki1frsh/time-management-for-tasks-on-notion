@@ -6,7 +6,7 @@ const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 const TOGGL_API_TOKEN = process.env.TOGGL_API_TOKEN;
 const TOGGL_WORKSPACE_ID = process.env.TOGGL_WORKSPACE_ID;
-const databaseId = process.env.NOTION_DATABASE_ID;
+const databaseId = process.env.NOTION_DATABASE_TASK_MANAGER_ID;
 
 // The prop name has date type which defines the schedule of the task
 const date_prop_name = "Schedule"
@@ -40,6 +40,7 @@ export default async function handler(req, res) {
 
   for (const page of pagesStream.results) {
     const statusProperty = page.properties?.["Status"];
+    console.log('')
     
     if (statusProperty?.checkbox) { // Set current time as date.end and stop running Toggl time entry
       try {
@@ -63,8 +64,6 @@ export default async function handler(req, res) {
       const togglResponse = await startTogglTimeEntry(page);
 
       await updateScheduleDateStartTime(page.id, 0, page);
-
-      setLastUpdatedTimestamp(page.last_edited_time);
       
       res.status(200).json({ message: 'STARTED: Notion page updates processed and Toggl time entry started.' });
     }
@@ -222,7 +221,7 @@ async function updateScheduleDateStartTime(pageId, togglEntryId, page) {
     const response = await notion.pages.update({
         page_id: pageId,
         properties: {
-            date_prop_name: {
+            [date_prop_name]: {
             date: {
                 start: now,
                 end: endTime
@@ -239,11 +238,12 @@ async function updateScheduleDateStartTime(pageId, togglEntryId, page) {
 
 async function updateScheduleDateEndTime(pageId, start_time) {
   const now = DateTime.now().setZone(time_zone).toISO({ includeOffset: true });  
+
   try {
     const response = await notion.pages.update({
       page_id: pageId,
       properties: {
-        date_prop_name: {
+        [date_prop_name]: {
           date: {
             start: start_time, // Inherit start time so that updaing succeeds
             end: now, // Set end to current time
